@@ -1,0 +1,290 @@
+importar sys
+de datetime importar datetime
+clase Libro:
+
+    metodo __init__(self, isbn,titulo, autor, año_publicacion, precio):
+        self.__isbn=isbn
+        self.__titulo = titulo
+        self.__autor = autor
+        self.__año_publicacion = año_publicacion
+        self.__precio = precio
+    metodo mostrarDatos(self):
+        Escribir (f"ISBN: {self.__isbn}\nTitulo: {self.__titulo}\nAutor: {self.__autor}\nAño Publicación: {self.__año_publicacion}\nPrecio: {self.__precio}")
+    metodo get_isbn(self):
+        devolver self.__isbn
+    metodo get_titulo(self):
+        devolver self.__titulo
+    metodo get_autor(self):
+        devolver self.__autor
+    metodo get_año(self):
+        devolver self.__año_publicacion
+    metodo get_precio(self):
+        devolver self.__precio
+    metodo set_isbn(self,isbn):
+        self.__isbn=isbn
+    metodo set_titulo(self,titulo):
+        self.__titulo=titulo
+    metodo set_autor(self,autor):
+        self.__autor=autor
+    metodo set_año(self,año):
+        self.__año_publicacion=año
+    metodo set_precio(self,precio):
+        self.__precio=precio
+
+clase Estanteria:
+    metodo __init__(self):
+        self.__libros=lista()
+    metodo registrarLibro(self):
+        continuar = Verdadero
+        Mientras continuar:
+            Mientras Verdadero:
+                Intenta:
+                    _opcion = Entero(Leer("Ha elegido 'Añadir Libro', desea continuar? (1 Continuar,0 Volver al menu)"))
+                Excepcion:
+                    Escribir ("Opcion no valida, intente de nuevo")
+                En cambio:
+                    Terminar
+            sí _opcion == 1:
+                isbn_go = Verdadero
+                Mientras isbn_go:
+                    Intenta:
+                        isbn = Entero(Leer("ISBN:\n"))
+                    Excepcion:
+                        Escribir ("Valor no valido, solo enteros")
+                    En cambio:
+                        longitud_isbn = longitud(str(isbn))
+                        sí longitud_isbn != 13:
+                            Escribir (f"Un ISBN es de 13 digitos, tu introdujiste {longitud_isbn}")
+                        En cambio:
+                            sí estanteria.longitud() == 0:
+                                Terminar
+                            En cambio:
+                                Para i en self.check_ISBN():
+                                    sí isbn == i:
+                                        Escribir ("Ya hay un libro con el mismo ISBN, intente con otro")
+                                        Continuar
+                                    En cambio:
+                                        isbn_go = Falso
+                                        Terminar
+                titulo = Leer("Titulo del libro:\n")
+                autor = Leer("Autor del libro:\n")
+                Mientras Verdadero:
+                    Intenta:
+                        _año = Leer("Año de publicacion:\n")
+                        año = datetime.strptime(_año, '%Y')
+                        año = año.year
+                    Excepcion:
+                        Escribir ("Valor no valido, solo enteros")
+                    En cambio:
+                        Terminar
+                Mientras Verdadero:
+                    Intenta:
+                        precio = Entero(Leer("Precio del libro:\n"))
+                    Excepcion:
+                        Escribir ("Valor no valido, solo enteros")
+                    En cambio:
+                        Terminar
+                Escribir ("Datos: ")
+                Escribir (f"ISBN: {isbn}\nTitulo: {titulo}\nAutor: {autor}\nAño Publicación: {año}\nPrecio: {precio}")
+                Mientras Verdadero:
+                    Intenta:
+                        save = Entero(Leer("Desea guardar los datos? (1 guardar y volver al menu, 0 cancelar y volver al menu)"))
+                    Excepcion:
+                        Escribir ("Valor no valido, solo enteros")
+                    En cambio:
+                        sí save == 1:
+                            libro = Libro(isbn, titulo, autor, año, precio)
+                            self.añadirLibro(libro)
+                            Escribir ("Libro guardado correctamente")
+                            continuar = Falso
+                            Terminar
+                        sí save == 0:
+                            continuar = Falso
+                            Terminar
+                        En cambio:
+                            Escribir ("Opcion no valida")
+            sí _opcion == 0:
+                continuar = Falso
+            En cambio:
+                Escribir ("Opcion no valida intente de nuevo")
+    metodo añadirLibro(self,libro):
+        self.__libros.agregar(libro)
+    metodo mostrarLibros(self):
+        c=0
+        Para i en self.__libros:
+            c=c+1
+            Escribir (f"Posicion: {c}")
+            i.mostrarDatos()
+            Escribir (50*"*")
+    metodo mostrarLibro(self,posicion):
+        self.__libros[posicion-1].mostrarDatos()
+    metodo eliminarLibro(self):
+        self.mostrarLibros()
+        Escribir ("Elija la posicion en el estante del libro que desee borrar, 0 para cancelar")
+        Mientras Verdadero:
+
+            Intenta:
+                posicion = Entero(Leer())
+            Excepcion:
+                Escribir ("Valor no valido")
+            En cambio:
+
+                sí posicion == 0:
+                    Terminar
+                En cambio:
+                    Intenta:
+                        self.__libros.pop(posicion-1)
+                    Excepcion:
+                        Escribir ("Lugar no ocupado, intente con otra posicion o presione 0 para salir")
+                        Continuar
+                    En cambio:
+                        self.__libros_copy=self.__libros
+                        self.__libros=lista()
+                        Escribir ("Libro eliminado.")
+                        Escribir ("Reacomodando libros...")
+                        Para i en self.__libros_copy:
+                            self.__libros.agregar(i)
+                        Escribir ("Libros ordenados correctamente.")
+                        Terminar
+    metodo longitud(self):
+        devolver longitud(self.__libros)
+    metodo check_ISBN(self):
+        self.__isbns = lista()
+        Para i en self.__libros:
+            self.__isbns.agregar(i.get_isbn())
+        devolver self.__isbns
+    metodo editarISBN(self,posicion,isbn):
+        self.__libros[posicion-1].set_isbn(isbn)
+    metodo editarTitulo(self,posicion,titulo):
+        self.__libros[posicion-1].set_titulo(titulo)
+    metodo editarAutor(self,posicion,autor):
+        self.__libros[posicion-1].set_autor(autor)
+    metodo editarAño(self,posicion,año):
+        self.__libros[posicion-1].set_año(año)
+    metodo editarPrecio(self,posicion,precio):
+        self.__libros[posicion-1].set_precio(precio)
+    metodo editarLibro(self):
+        sí self.longitud() == 0:
+            Escribir ("No se han añadido libros aun.")
+        En cambio:
+            self.mostrarLibros()
+            Mientras Verdadero:
+                Intenta:
+                    Escribir ("Elija la posicion del estante en la que se encuentra el libro que quiere editar. 0 Volver al menu")
+                    posicion = Entero(Leer())
+                Excepcion:
+                    Escribir ("Valor no admitido, presione 0 para salir")
+                En cambio:
+                    sí posicion == 0:
+                        Terminar
+                    sí posicion > self.longitud():
+                        Escribir ("Posicion fuera de rango. Intente de nuevo.")
+                    En cambio:
+                        self.mostrarLibro(posicion)
+                        opciones_edit = Verdadero
+                        Mientras opciones_edit:
+                            Intenta:
+                                Escribir ("Presione el numero segun el atributo a cambiar")
+                                Escribir ("1)ISBN\n2)Titulo\n3)Autor\n4)Año Publicacion\n5)Precio\n0)Volver")
+                                _opcion = Entero(Leer())
+                            Excepcion:
+                                Escribir ("Valor no valido")
+                            En cambio:
+                                sí _opcion == 0:
+                                    opciones_edit = Falso
+                                sí _opcion == 1:
+                                    isbn_go = Verdadero
+                                    Mientras isbn_go:
+                                        Intenta:
+                                            isbn = Entero(Leer("ISBN:\n"))
+                                        Excepcion:
+                                            Escribir ("Valor no valido, solo enteros")
+                                        En cambio:
+                                            longitud_isbn = longitud(str(isbn))
+                                            sí longitud_isbn != 13:
+                                                Escribir (f"Un ISBN es de 13 digitos, tu introdujiste {longitud_isbn}")
+                                            En cambio:
+                                                Para i en self.check_ISBN():
+                                                    sí isbn == i:
+                                                        Escribir ("Ya hay un libro con el mismo ISBN, intente con otro")
+                                                        Continuar
+                                                    En cambio:
+                                                        self.editarISBN(posicion, isbn)
+                                                        Escribir ("Cambio guardado con exito")
+                                                        isbn_go = Falso
+                                                        Terminar
+                                sí _opcion == 2:
+                                    titulo = Leer("Titulo del libro:\n")
+                                    self.editarTitulo(posicion, titulo)
+                                    Escribir ("Cambio guardado con exito.")
+                                sí _opcion == 3:
+                                    autor = Leer("Autor del libro:\n")
+                                    self.editarAutor(posicion,autor)
+                                    Escribir ("Cambio guardado con exito.")
+                                sí _opcion == 4:
+                                    Mientras Verdadero:
+                                        Intenta:
+                                            _año = Leer("Año de publicacion:\n")
+                                            año = datetime.strptime(_año, '%Y')
+                                            año = año.year
+                                        Excepcion:
+                                            Escribir ("Valor no valido, solo enteros")
+                                        En cambio:
+                                            self.editarAño(posicion, año)
+                                            Escribir ("Cambio guardado con exito")
+                                            Terminar
+                                sí _opcion == 5:
+                                    Mientras Verdadero:
+                                        Intenta:
+                                            precio = Entero(Leer("Precio del libro:\n"))
+                                        Excepcion:
+                                            Escribir ("Valor no valido, solo enteros")
+                                        En cambio:
+                                            self.editarPrecio(posicion, precio)
+                                            Escribir ("Cambio guardado con exito")
+                                            Terminar
+clase Menu:
+    metodo __init__(self):
+        self.iniciarMenu()
+    metodo iniciarMenu(self):
+        Escribir ("Elija una opción: ")
+        Escribir ("1)Añadir Libro")
+        Escribir ("2)Eliminar Libro")
+        Escribir ("3)Editar Libro")
+        Escribir ("4)Mostrar Libros")
+        Escribir ("5)Salir")
+        Mientras Verdadero:
+            Intenta:
+                opcion = Entero(Leer())
+            Excepcion:
+                Escribir ("Opcion no valida intente de nuevo")
+            En cambio:
+                Terminar
+        sí opcion == 1:
+            
+            estanteria.registrarLibro()
+        sí opcion == 2:
+            sí estanteria.longitud()==0:
+                Escribir ("No se han añadido libros aun.")
+            En cambio:
+	    	estanteria.eliminarLibro()
+        sí opcion == 3:
+	    sí estanteria.longitud()==0:
+                Escribir ("No se han añadido libros aun.")
+            En cambio:
+            	estanteria.editarLibro()
+        sí opcion == 4:
+            sí estanteria.longitud()==0:
+                Escribir ("No se han añadido libros aun.")
+            En cambio:
+                estanteria.mostrarLibros()
+        sí opcion == 5:
+            sys.exit()
+        En cambio:
+            Escribir ("Opcion no valida, intente de nuevo...")
+    metodo salir(self):
+        sys.exit()
+
+estanteria = Estanteria()
+Mientras Verdadero:
+    menu=Menu()
