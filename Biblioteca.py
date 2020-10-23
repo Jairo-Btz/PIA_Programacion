@@ -1,6 +1,3 @@
-
-#importamos la clase sys para salir del sistema
-#importamos la clase datetime para que nos ayude con el formato de las fechas
 import sys
 from datetime import datetime
 #definimos clase libro para poder registrar nuevos libros
@@ -19,25 +16,7 @@ class Libro:
     #metodo getters para obtener los atributos de la clase, ya que son privados
     def get_isbn(self):
         return self.__isbn
-    def get_titulo(self):
-        return self.__titulo
-    def get_autor(self):
-        return self.__autor
-    def get_año(self):
-        return self.__año_publicacion
-    def get_precio(self):
-        return self.__precio
-    #metodos setters para actualizar los atributos de la clase
-    def set_isbn(self,isbn):
-        self.__isbn=isbn
-    def set_titulo(self,titulo):
-        self.__titulo=titulo
-    def set_autor(self,autor):
-        self.__autor=autor
-    def set_año(self,año):
-        self.__año_publicacion=año
-    def set_precio(self,precio):
-        self.__precio=precio
+
 
 
 #definimos la clase Estanteria que servira como almacenamiento de los libros
@@ -173,10 +152,6 @@ class Estanteria:
             print(f"Posicion: {c}")
             i.mostrarDatos()
             print(50*"*")
-    #metodo para mostra un libro en especifico a la hora de editar
-    def mostrarLibro(self,posicion):
-        #se llama al metodo mostrarDatos de la clase Libro en funcion del elemento elegido
-        self.__libros[posicion-1].mostrarDatos()
     #metodo para eliminar libros
     def eliminarLibro(self):
         #primero mostramos en consola todos los libros
@@ -231,141 +206,7 @@ class Estanteria:
             self.__isbns.append(i.get_isbn())
         #devolvemos la lista
         return self.__isbns
-    #metodos usados para editar los atributos de los libros gracias a los metodos setters de la clase Libro
-    def editarISBN(self,posicion,isbn):
-        self.__libros[posicion-1].set_isbn(isbn)
-    def editarTitulo(self,posicion,titulo):
-        self.__libros[posicion-1].set_titulo(titulo)
-    def editarAutor(self,posicion,autor):
-        self.__libros[posicion-1].set_autor(autor)
-    def editarAño(self,posicion,año):
-        self.__libros[posicion-1].set_año(año)
-    def editarPrecio(self,posicion,precio):
-        self.__libros[posicion-1].set_precio(precio)
-    #metodo para editar el libro
-    def editarLibro(self):
-        #primero verificamos que haya libros
-        if self.longitud() == 0:
-            print("No se han añadido libros aun.")
-        else:
-            #una vez pasada la condicion anterior imprimimos los libros gracias al metodo mostrarLibros
-            self.mostrarLibros()
-            # iniciamos ciclo para que haya una repiticion en dado caso de no ingresar una respuesta correcta
 
-            while True:
-                # definimos un bloque de tratamiento de excepciones en dado caso de que el usuario ingrese un valor
-                # no valido o fuera de rango
-                try:
-                    print("Elija la posicion del estante en la que se encuentra el libro que quiere editar. 0 Volver al menu")
-                    posicion = int(input())
-                except:
-                    print("Valor no admitido, presione 0 para salir")
-                else:
-                    #si el valor ingresado es 0, volvera al menu el usuario
-                    if posicion == 0:
-                        break
-                    elif posicion > self.longitud():
-                        print("Posicion fuera de rango. Intente de nuevo.")
-                    else:
-                        #una vez superado el bloque anterior lo que hacemos es mostrar en pantalla el libro seleccionado
-                        self.mostrarLibro(posicion)
-                        opciones_edit = True
-                        # iniciamos ciclo para que haya una repiticion en dado caso de no ingresar una respuesta correcta
-
-                        while opciones_edit:
-                            # definimos un bloque de tratamiento de excepciones en dado caso de que el usuario ingrese
-                            # un valor no valido
-                            try:
-                                print("Presione el numero segun el atributo a cambiar")
-                                print("1)ISBN\n2)Titulo\n3)Autor\n4)Año Publicacion\n5)Precio\n0)Volver")
-                                _opcion = int(input())
-                            except:
-                                print("Valor no valido")
-                            else:
-                                #si elije 0 volvera a la opcion de elegir el libro
-                                if _opcion == 0:
-                                    opciones_edit = False
-
-                                #si elige 1 editara el ISBN
-                                elif _opcion == 1:
-                                    isbn_go = True
-                                    while isbn_go:
-                                        # definimos un bloque de tratamiento de excepciones en dado caso de que el usuario ingrese
-                            # un valor no valido
-                                        try:
-                                            isbn = int(input("ISBN:\n"))
-                                        except:
-                                            print("Valor no valido, solo enteros")
-                                        else:
-                                            # variable para ver el largo del isbn
-                                            len_isbn = len(str(isbn))
-                                            #si el largo del valor ingresado es diferente a 13 no dejara avanzar
-                                            if len_isbn != 13:
-                                                print(f"Un ISBN es de 13 digitos, tu introdujiste {len_isbn}")
-                                            else:
-                                                #verificamos el isbn para ver que no este anteriormente ingresado
-                                                for i in self.check_ISBN():
-                                                    if isbn == i:
-                                                        print("Ya hay un libro con el mismo ISBN, intente con otro")
-                                                        continue
-                                                    else:
-                                                        #una vez pasados los filtros usamos el metodo editarISBN para
-                                                        #registrar el cambio
-                                                        self.editarISBN(posicion, isbn)
-                                                        print("Cambio guardado con exito")
-                                                        isbn_go = False
-                                                        #avanzamos
-                                                        break
-                                #opcion para cambiar el titulo
-                                elif _opcion == 2:
-                                    #variable del nuevo titulo
-                                    titulo = input("Titulo del libro:\n")
-                                    #usamos el metodo editarTitulo
-                                    self.editarTitulo(posicion, titulo)
-                                    print("Cambio guardado con exito.")
-                                #opcion para cambiar el autor
-                                elif _opcion == 3:
-                                    #variable del nuevo titulo
-                                    autor = input("Autor del libro:\n")
-                                    #usamos el metodo editarAutor
-                                    self.editarAutor(posicion,autor)
-                                    print("Cambio guardado con exito.")
-                                #opcion para cambiar el año de la publicacion
-                                elif _opcion == 4:
-                                    # iniciamos ciclo para que haya una repiticion en dado caso de no ingresar una respuesta correcta
-
-                                    while True:
-                                        # definimos un bloque de excepciones para verificar que el dato ingresado coincide con el requerido
-
-                                        try:
-                                            _año = input("Año de publicacion:\n")
-                                            año = datetime.strptime(_año, '%Y')
-                                            año = año.year
-                                        except:
-                                            print("Valor no valido, solo enteros")
-                                        else:
-                                            #si coincide entonces usamos el metodo editarAño para cambiar el año
-                                            self.editarAño(posicion, año)
-                                            print("Cambio guardado con exito")
-                                            #volvemos al menu
-                                            break
-                                elif _opcion == 5:
-                                    # iniciamos ciclo para que haya una repiticion en dado caso de no ingresar una respuesta correcta
-
-                                    while True:
-                                        # definimos un bloque de excepciones para verificar que el dato ingresado coincide con el requerido
-
-                                        try:
-                                            precio = int(input("Precio del libro:\n"))
-                                        except:
-                                            print("Valor no valido, solo enteros")
-                                        else:
-                                            #si coincide entonces usamos el metodo editarPrecio para cambiar el precio
-
-                                            self.editarPrecio(posicion, precio)
-                                            print("Cambio guardado con exito")
-                                            #volvemos al menu
-                                            break
 #clase definida para construir un Menu
 class Menu:
     #iniciador  del menu
@@ -376,9 +217,8 @@ class Menu:
         print("Elija una opción: ")
         print("1)Añadir Libro")
         print("2)Eliminar Libro")
-        print("3)Editar Libro")
-        print("4)Mostrar Libros")
-        print("5)Salir")
+        print("3)Mostrar Libros")
+        print("4)Salir")
         #iniciamos ciclo por si hay respuesta no validas
         while True:
             #definimos un bloque de tratamiento de excepciones por si un valor ingresado no es valido
@@ -401,21 +241,15 @@ class Menu:
                 print("No se han añadido libros aun.")
             else:
                 estanteria.eliminarLibro()
-        # si el valor ingresado es 3 entonces llamado al metodo editarLibro de la clase Estanteria
+
+            # si el valor ingresado es 3 entonces llamado al metodo mostrarLibro de la clase Estanteria
         elif opcion == 3:
             if estanteria.longitud()==0:
                 print("No se han añadido libros aun.")
             else:
-                estanteria.editarLibro()
-
-            # si el valor ingresado es 4 entonces llamado al metodo mostrarLibro de la clase Estanteria
-        elif opcion == 4:
-            if estanteria.longitud()==0:
-                print("No se han añadido libros aun.")
-            else:
                 estanteria.mostrarLibros()
-            #si el valor ingresado es 5 entonces con ayuda del metodo salir  salimos del programa
-        elif opcion == 5:
+            #si el valor ingresado es 4 entonces con ayuda del metodo salir  salimos del programa
+        elif opcion == 4:
             self.salir()
         else:
             print("Opcion no valida, intente de nuevo...")
